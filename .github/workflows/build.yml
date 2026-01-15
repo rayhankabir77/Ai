@@ -29,4 +29,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Multi-Platform-Builds
-          path: ./*-win32-x64/ , ./*-darwin-x64/ , ./*-linux-x64/
+          path: |
+            *-win32-x64/
+            *-darwin-x64/
+            *-linux-x64/
