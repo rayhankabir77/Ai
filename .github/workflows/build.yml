@@ -1,4 +1,4 @@
-name: Build EXE
+name: Build All Platforms
 on: [push, workflow_dispatch]
 
 jobs:
@@ -16,12 +16,17 @@ jobs:
       - name: Install Nativefier
         run: npm install -g nativefier
 
-      - name: Create EXE
-        run: |
-          nativefier --name "EndlessCityRacer" --platform "windows" --arch "x64" "file://${{ github.workspace }}/index.html" --internal-urls ".*"
+      - name: Build Windows
+        run: nativefier --name "EndlessCityRacer" --platform "windows" --arch "x64" "file://${{ github.workspace }}/index.html"
 
-      - name: Upload Build
+      - name: Build macOS
+        run: nativefier --name "EndlessCityRacer" --platform "mac" --arch "x64" "file://${{ github.workspace }}/index.html"
+
+      - name: Build Linux
+        run: nativefier --name "EndlessCityRacer" --platform "linux" --arch "x64" "file://${{ github.workspace }}/index.html"
+
+      - name: Upload All Builds
         uses: actions/upload-artifact@v4
         with:
-          name: EndlessCityRacer-Windows
-          path: ./*-win32-x64/
+          name: Multi-Platform-Builds
+          path: ./*-win32-x64/ , ./*-darwin-x64/ , ./*-linux-x64/
