@@ -1,22 +1,27 @@
 name: Build EXE
-on: [push]
+on: [push, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Export EXE
-        uses: its-kumar-pritish/html-to-exe-action@v1.0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          html_path: 'index.html'
-          app_name: 'EndlessCityRacer'
+          node-version: '18'
 
-      - name: Upload Result
-        uses: actions/upload-artifact@v3
+      - name: Install Nativefier
+        run: npm install -g nativefier
+
+      - name: Create EXE
+        run: |
+          nativefier --name "EndlessCityRacer" --platform "windows" --arch "x64" "file://${{ github.workspace }}/index.html" --internal-urls ".*"
+
+      - name: Upload Build
+        uses: actions/upload-artifact@v4
         with:
-          name: Windows-Build
-          path: output/
-          
+          name: EndlessCityRacer-Windows
+          path: ./*-win32-x64/
