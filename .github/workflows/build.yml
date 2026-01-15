@@ -1,9 +1,9 @@
-name: Build All Platforms
+name: Build macOS Version
 on: [push, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -14,22 +14,21 @@ jobs:
           node-version: '18'
 
       - name: Install Nativefier
-        run: npm install -g nativefier
-
-      - name: Build Windows
-        run: nativefier --name "EndlessCityRacer" --platform "windows" --arch "x64" "file://${{ github.workspace }}/index.html"
+        run: sudo npm install -g nativefier
 
       - name: Build macOS
-        run: nativefier --name "EndlessCityRacer" --platform "mac" --arch "x64" "file://${{ github.workspace }}/index.html"
+        run: |
+          nativefier --name "EndlessCityRacer" \
+          --platform "mac" \
+          --arch "x64" \
+          --browserwindow-options '{ "webPreferences": { "nodeIntegration": false } }' \
+          "index.html"
 
-      - name: Build Linux
-        run: nativefier --name "EndlessCityRacer" --platform "linux" --arch "x64" "file://${{ github.workspace }}/index.html"
+      - name: Check Folder
+        run: ls -R
 
-      - name: Upload All Builds
+      - name: Upload macOS Build
         uses: actions/upload-artifact@v4
         with:
-          name: Multi-Platform-Builds
-          path: |
-            *-win32-x64/
-            *-darwin-x64/
-            *-linux-x64/
+          name: EndlessCityRacer-macOS
+          path: EndlessCityRacer-darwin-x64/
