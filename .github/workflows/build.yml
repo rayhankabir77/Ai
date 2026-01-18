@@ -10,10 +10,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # আপডেট করা হয়েছে v4 এ
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4 # আপডেট করা হয়েছে v4 এ
         with:
           node-version: 18
 
@@ -21,7 +21,6 @@ jobs:
         run: |
           npm install -g @capacitor/cli
           npm install @capacitor/core @capacitor/ios
-          # যদি আপনার index.html একটি 'www' বা 'dist' ফোল্ডারে থাকে
           mkdir -p www
           cp index.html www/ 
 
@@ -37,7 +36,6 @@ jobs:
           BUILD_PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: |
-          # Keychain তৈরি এবং সার্টিফিকেট ইমপোর্ট করার স্ক্রিপ্ট
           CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
           PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
@@ -63,7 +61,7 @@ jobs:
           xcodebuild -exportArchive -archivePath App.xcarchive -exportOptionsPlist exportOptions.plist -exportPath build -allowProvisioningUpdates
 
       - name: Upload IPA
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # এখানে v4 ব্যবহার করা হয়েছে
         with:
           name: my-app-ipa
           path: ios/App/build/*.ipa
